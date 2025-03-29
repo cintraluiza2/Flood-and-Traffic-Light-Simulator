@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulator</title>
+    <style>
+        /* Estilo da barra de navegação superior */
+        .navbar {
+            background-color: white;
+            padding: 10px 0;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Estilo dos botões da barra de navegação */
+        .navbar button {
+            background-color: white;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Efeito ao passar o mouse sobre os botões da barra de navegação */
+        .navbar button:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Layout principal da página */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Container principal */
+        .container {
+            display: flex;
+            flex: 1;
+        }
+
+        /* Coluna lateral */
+        .sidebar {
+            width: 200px;
+            background-color: #f9f9f9;
+            border-right: 1px solid #ddd;
+            padding: 20px;
+        }
+
+        /* Estilo dos botões da coluna lateral */
+        .sidebar button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Efeito ao passar o mouse sobre os botões da coluna lateral */
+        .sidebar button:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Área de conteúdo principal */
+        .content {
+            flex: 1;
+            padding: 20px;
+            background-color: white;
+        }
+
+        /* Estilo dos títulos */
+        h2 {
+            margin-top: 0;
+        }
+
+        /* Estilo dos parágrafos */
+        p {
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <!-- Barra de navegação superior -->
+    <div class="navbar">
+        <button onclick="window.location.href='index.html'">Editor</button>
+        <button onclick="window.location.href='documentation.html'">Documentation</button>
+        <button onclick="window.location.href='code.html'">Code</button>
+        <button onclick="window.location.href='chat.html'">Chat</button>
+    </div>
+
+    <!-- Container principal -->
+    <div class="container">
+        <!-- Coluna lateral -->
+        <div class="sidebar">
+            <button onclick="showContent('intro')">Introduction</button>
+            <button onclick="showContent('installation')">Installation</button>
+            <button onclick="showContent('usage')">How to use</button>
+            <button onclick="showContent('examples')">Examples</button>
+            <button onclick="showContent('faq')">FAQ</button>
+        </div>
+
+        <!-- Área de conteúdo principal -->
+        <div class="content" id="content">
+            <h2>Welcome to the Documentation</h2>
+            <p>Select a topic in the sidebar to see more details.</p>
+        </div>
+    </div>
+
+    <script>
+        // Função para exibir o conteúdo correspondente ao botão clicado
+        function showContent(section) {
+            const contentDiv = document.getElementById('content');
+
+            // Conteúdos para cada seção
+            const contents = {
+                intro: `
+                    <h2>Introduction</h2>
+                    <p>This is a chat system integrated with a language model (LLM) to assist with modeling and simulation tasks.</p>
+                    <p>The system allows you to interact with the model to get clear and informative answers.</p>
+                `,
+                installation: `
+                    <h2>Installation</h2>
+                    <p>To install the system, follow these steps:</p>
+                    <ol>
+                        <li>Clone the project repository.</li>
+                        <li>Install the dependencies using <code>pip install -r requirements.txt</code>.</li>
+                        <li>Run the Flask server with <code>python app.py</code>.</li>
+                    </ol>
+                `,
+                usage: `
+                    <h2>How to Use</h2>
+                    <p>To use the system:</p>
+                    <ol>
+                        <li>Go to the chat page.</li>
+                        <li>Type your message in the input field.</li>
+                        <li>Press "Send" or hit "Enter" to get a response.</li>
+                    </ol>
+                `,
+                examples: `
+                    <h2>Examples</h2>
+                    <p>Here are some usage examples:</p>
+                    <ul>
+                        <li><strong>Example 1:</strong> "Explain the concept of mathematical modeling."</li>
+                        <li><strong>Example 2:</strong> "What are the steps of a simulation?"</li>
+                        <li><strong>Example 3:</strong> "How can I validate a model?"</li>
+                    </ul>
+                `,
+                faq: `
+                    <h2>FAQ</h2>
+                    <p><strong>Q: Can I use the system offline?</strong></p>
+                    <p>A: Yes, as long as the LLM model is installed locally.</p>
+                    <p><strong>Q: How can I improve the model's responses?</strong></p>
+                    <p>A: Provide clear and detailed context in your questions.</p>
+                `
+            };
+
+            // Atualiza o conteúdo da área principal
+            contentDiv.innerHTML = contents[section] || `<p>Select a topic in the sidebar.</p>`;
+        }
+    </script>
+</body>
+</html>
