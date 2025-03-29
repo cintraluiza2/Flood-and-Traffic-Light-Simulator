@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulator</title>
+    <style>
+        /* Estilo da barra branca no topo */
+        .navbar {
+            background-color: white;
+            padding: 10px 0;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Estilo dos botões */
+        .navbar button {
+            background-color: white;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Efeito ao passar o mouse sobre os botões */
+        .navbar button:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Estilo do corpo da página */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Estilo do container do chat */
+        .chat-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+        }
+
+        /* Estilo das mensagens */
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 70%;
+        }
+
+        /* Estilo da mensagem do usuário */
+        .message.user {
+            background-color: #007bff;
+            color: white;
+            margin-left: auto;
+        }
+
+        /* Estilo da mensagem do bot */
+        .message.bot {
+            background-color: #e9ecef;
+            color: black;
+            margin-right: auto;
+        }
+
+        /* Estilo da área de entrada de texto */
+        .chat-input {
+            padding: 10px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+            display: flex;
+        }
+
+        /* Estilo do campo de entrada de texto */
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Estilo do botão de enviar */
+        .chat-input button {
+            padding: 10px 20px;
+            margin-left: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Efeito ao passar o mouse sobre o botão de enviar */
+        .chat-input button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <!-- Barra de navegação -->
+    <div class="navbar">
+        <button onclick="openEditor()">Editor</button>
+        <button onclick="window.location.href='documentacao.html'">Documentation</button>
+        <button>Code</button>
+        <button onclick="window.location.href='chat.html'">Chat</button>
+    </div>
+
+    <!-- Container das mensagens do chat -->
+    <div class="chat-container" id="chat-messages">
+        <!-- Mensagem inicial do bot -->
+        <div class="message bot">Hello! How can I help you today?</div>
+    </div>
+
+    <!-- Área de entrada de texto -->
+    <div class="chat-input">
+        <input type="text" id="chat-input" placeholder="Type your message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        // Função para enviar mensagens
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+
+            if (message) {
+                // Adiciona a mensagem do usuário ao chat
+                const userMessage = document.createElement('div');
+                userMessage.classList.add('message', 'user');
+                userMessage.textContent = message;
+                document.getElementById('chat-messages').appendChild(userMessage);
+
+                // Limpa o campo de entrada
+                input.value = '';
+
+                // Envia a mensagem para o backend e obtém a resposta do LLM
+                try {
+                    const response = await fetch('/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ message: message }),
+                    });
+
+                    const data = await response.json();
+
+                    // Adiciona a resposta do bot ao chat
+                    const botMessage = document.createElement('div');
+                    botMessage.classList.add('message', 'bot');
+                    botMessage.textContent = data.response;
+                    document.getElementById('chat-messages').appendChild(botMessage);
+                } catch (error) {
+                    console.error('Erro ao enviar mensagem:', error);
+                    const botMessage = document.createElement('div');
+                    botMessage.classList.add('message', 'bot');
+                    botMessage.textContent = 'Sorry, something went wrong while processing your message.';
+                    document.getElementById('chat-messages').appendChild(botMessage);
+                }
+
+                // Rola para a última mensagem
+                const chatMessages = document.getElementById('chat-messages');
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+
+        // Permite enviar mensagens pressionando Enter
+        document.getElementById('chat-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
